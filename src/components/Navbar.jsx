@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
 
 const LINKS = [
-    { href: '#about', label: 'Profile' },
-    { href: '#experience', label: 'Experience' },
-    { href: '#skills', label: 'Capabilities' },
-    { href: '#projects', label: 'Deployments' },
-    { href: '#contact', label: 'Connect' },
+    { href: '#about', label: 'About' },
+    { href: '#capabilities', label: 'Capabilities' },
+    { href: '#projects', label: 'Projects' },
+    { href: '#workflow', label: 'Process' },
+    { href: '#contact', label: 'Contact' },
 ];
 
 const Navbar = () => {
@@ -15,12 +16,12 @@ const Navbar = () => {
 
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > 40);
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     useEffect(() => {
-        const ids = ['hero', 'about', 'experience', 'skills', 'projects', 'contact'];
+        const ids = ['hero', 'about', 'capabilities', 'projects', 'workflow', 'contact', 'freelance'];
         const sections = ids.map(id => document.getElementById(id)).filter(Boolean);
 
         const observer = new IntersectionObserver(
@@ -36,12 +37,16 @@ const Navbar = () => {
         return () => observer.disconnect();
     }, []);
 
+    const handleLinkClick = () => {
+        setIsMenuOpen(false);
+    };
+
     return (
         <nav className={`topbar ${isScrolled ? 'is-scrolled' : ''}`} id="navbar">
             <div className="topbar-inner">
-                <a href="#hero" className="topbar-mark" onClick={() => setIsMenuOpen(false)}>
+                <a href="#hero" className="topbar-mark" onClick={handleLinkClick}>
                     <span className="mark-node" />
-                    <span className="mark-text">Anshu Prajapati</span>
+                    <span className="mark-text">ANSHU</span>
                 </a>
 
                 <div className={`topbar-links ${isMenuOpen ? 'is-open' : ''}`}>
@@ -50,22 +55,31 @@ const Navbar = () => {
                             key={link.href}
                             href={link.href}
                             className={`topbar-link ${activeSection === link.href.slice(1) ? 'is-active' : ''}`}
-                            onClick={() => setIsMenuOpen(false)}
+                            onClick={handleLinkClick}
                         >
                             {link.label}
                         </a>
                     ))}
-                    <a href="#contact" className="topbar-cta" onClick={() => setIsMenuOpen(false)}>
-                        Get in touch
+                    <a href="#contact" className="topbar-cta-mobile" onClick={handleLinkClick}>
+                        Let's Talk
                     </a>
                 </div>
+
+                <a href="#contact" className="topbar-cta" onClick={handleLinkClick}>
+                    Let's Talk
+                </a>
 
                 <button
                     className={`topbar-toggle ${isMenuOpen ? 'is-open' : ''}`}
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    aria-label="Toggle navigation"
+                    aria-label="Toggle navigation menu"
+                    aria-expanded={isMenuOpen}
                 >
-                    <span /><span /><span />
+                    {isMenuOpen ? (
+                        <HiOutlineX size={24} />
+                    ) : (
+                        <HiOutlineMenu size={24} />
+                    )}
                 </button>
             </div>
         </nav>
