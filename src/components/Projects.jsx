@@ -1,237 +1,251 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-
-const PROJECTS = [
-    {
-        id: 'whatsapp-support',
-        name: 'Enterprise WhatsApp AI Support Assistant',
-        shortDesc: 'Intelligent WhatsApp support system powered by LLMs and RAG architecture.',
-        tag: 'RAG',
-        priority: 1,
-        points: [
-            'Built an intelligent WhatsApp support system leveraging LLMs and a RAG architecture.',
-            'Integrated the Meta WhatsApp Cloud API for production-grade messaging at scale.',
-            'Implemented multi-tenant routing with context preservation and conversation history.',
-            'Achieved 95% accuracy on customer intent classification and resolution.',
-        ],
-        stack: ['LLMs', 'RAG', 'Meta WhatsApp Cloud API', 'FastAPI', 'Python', 'Pinecone'],
-        problem: 'Enterprises needed an AI support assistant capable of handling complex customer queries over WhatsApp with consistent, contextual responses.',
-        solution: 'Designed a RAG-based conversational system that retrieves knowledge from documentation, enriches context with conversation history, and routes inquiries intelligently.',
-        technologies: 'LLMs (OpenAI), RAG (Pinecone Vector DB), Meta WhatsApp Business API, FastAPI, Python',
-        deployment: 'Deployed on Azure Container Instances with PostgreSQL for persistence.',
-        github: 'https://github.com/anshuu-prajapati',
-    },
-    {
-        id: 'person-reid',
-        name: 'Person Re-Identification System',
-        shortDesc: 'Deep learning system for cross-camera person tracking and real-time analytics.',
-        tag: 'Computer Vision',
-        priority: 2,
-        points: [
-            'Built a deep-learning person tracking system using YOLOv8 and PyTorch for cross-camera identity matching.',
-            'Implemented optimized feature extraction and re-identification pipelines to power real-time passenger analytics.',
-            'Achieved real-time processing on edge devices with 92% re-identification accuracy.',
-            'Enabled actionable insights for occupancy monitoring and passenger flow analysis.',
-        ],
-        stack: ['YOLOv8', 'PyTorch', 'Computer Vision', 'OpenCV', 'Python'],
-        problem: 'Transportation systems needed real-time passenger analytics across multiple camera feeds for occupancy monitoring and flow optimization.',
-        solution: 'Built a computer vision pipeline that detects persons, extracts distinguishing features, and matches identities across cameras with minimal latency.',
-        technologies: 'YOLOv8 (detection), PyTorch (deep learning), OpenCV (image processing), Python',
-        deployment: 'Edge deployment on NVIDIA Jetson devices for real-time processing.',
-        github: 'https://github.com/anshuu-prajapati',
-    },
-    {
-        id: 'virtual-tryon',
-        name: 'AI Virtual Try-On Platform',
-        shortDesc: 'Computer vision solution for realistic garment overlay and personalization.',
-        tag: 'Computer Vision',
-        priority: 3,
-        points: [
-            'Built an AI-powered virtual try-on solution using computer vision models for precise garment overlay.',
-            'Implemented automated image processing pipelines for personalized visualization that improves customer engagement.',
-            'Integrated with e-commerce platform resulting in 40% increase in customer interaction time.',
-        ],
-        stack: ['Computer Vision', 'Image Processing', 'PyTorch', 'React', 'FastAPI'],
-        problem: 'E-commerce retailers wanted to reduce return rates by allowing customers to visualize garments before purchase.',
-        solution: 'Developed a computer vision system that detects body landmarks, applies transformations, and overlays garments with realistic fitting.',
-        technologies: 'Computer Vision (body pose detection), OpenCV, PyTorch models, React frontend, FastAPI backend',
-        deployment: 'AWS Lambda for image processing, React SPA on CloudFront CDN.',
-        github: 'https://github.com/anshuu-prajapati',
-    },
-];
-
-const ProjectModal = ({ project, isOpen, onClose }) => {
-    return (
-        <AnimatePresence>
-            {isOpen && (
-                <>
-                    <motion.div
-                        className="modal-backdrop"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={onClose}
-                    />
-                    <motion.div
-                        className="project-modal"
-                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        <button className="modal-close" onClick={onClose} aria-label="Close modal">
-                            ✕
-                        </button>
-
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h2 className="modal-title">{project.name}</h2>
-                                <span className="modal-tag">{project.tag}</span>
-                            </div>
-
-                            <div className="modal-section">
-                                <h3 className="modal-section-title">Problem</h3>
-                                <p className="modal-section-text">{project.problem}</p>
-                            </div>
-
-                            <div className="modal-section">
-                                <h3 className="modal-section-title">Solution</h3>
-                                <p className="modal-section-text">{project.solution}</p>
-                            </div>
-
-                            <div className="modal-section">
-                                <h3 className="modal-section-title">Technologies</h3>
-                                <p className="modal-section-text">{project.technologies}</p>
-                            </div>
-
-                            <div className="modal-section">
-                                <h3 className="modal-section-title">Key Achievements</h3>
-                                <ul className="modal-points">
-                                    {project.points.map((point, idx) => (
-                                        <li key={idx}>{point}</li>
-                                    ))}
-                                </ul>
-                            </div>
-
-                            <div className="modal-section">
-                                <h3 className="modal-section-title">Deployment</h3>
-                                <p className="modal-section-text">{project.deployment}</p>
-                            </div>
-
-                            <div className="modal-footer">
-                                <a href={project.github} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-                                    <span>View on GitHub</span>
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                        <path d="M6 12l4-4-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </motion.div>
-                </>
-            )}
-        </AnimatePresence>
-    );
-};
+import { motion } from 'framer-motion';
 
 const Projects = () => {
-    const [selectedProject, setSelectedProject] = useState(null);
+    const [activeProject, setActiveProject] = useState(0);
+    const [isBooting, setIsBooting] = useState(false);
 
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-                delayChildren: 0.1,
-            },
+    const projectsData = [
+        {
+            title: "Doc.anshuu.me",
+            featured: true,
+            link: "https://doc.anshuu.me",
+            linkIcon: "web",
+            points: [
+                "Built AI-powered document intelligence platform for intelligent analysis, search, and Q&A",
+                "Implemented advanced NLP for document understanding, extraction, and semantic search",
+                "Created intuitive UI for multi-document upload, analysis, and interactive querying",
+                "Integrated with state-of-the-art LLM models for accurate document comprehension"
+            ],
+            tools: ["Python", "LLMs", "RAG", "Document Intelligence", "FastAPI", "React"]
         },
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.5, ease: 'easeOut' },
+        {
+            title: "MOD Pizza Analytics",
+            featured: true,
+            link: "https://github.com/anshuu-prajapati/MOD_PIZZA.git",
+            linkIcon: "github",
+            points: [
+                "Developed AI-powered customer analytics system using computer vision",
+                "Analyzed real-time footfall patterns, crowd density, and seating behavior",
+                "Identified peak hours, customer preferences, and occupancy insights for optimization",
+                "Enabled data-driven operational decisions for customer experience improvement"
+            ],
+            tools: ["Python", "Computer Vision", "YOLOv8", "Data Analytics", "OpenCV", "Pandas"]
         },
-    };
+        {
+            title: "GPS Voice Agent",
+            featured: true,
+            link: "https://github.com/anshuu-prajapati/gps-voice-agent",
+            linkIcon: "github",
+            points: [
+                "Built AI voice-calling agent for automated customer conversations and support",
+                "Implemented NLU for intent recognition and multi-turn conversational interactions",
+                "Created intelligent workflow automation for query handling and resolution",
+                "Deployed production-ready voice agent with high accuracy and natural responses"
+            ],
+            tools: ["Python", "Voice AI", "LLMs", "FastAPI", "NLP", "Twilio"]
+        },
+        {
+            title: "AI Quotation Generator",
+            featured: true,
+            link: "https://ai-quotations.littlejalebis.com/quotation-maker",
+            linkIcon: "web",
+            points: [
+                "Developed AI quotation generator converting requirements into professional quotes",
+                "Implemented intelligent parsing of specifications and business requirements",
+                "Created structured quotation formatting with automated calculations and templates",
+                "Built intuitive UI for quick quotation generation and customization"
+            ],
+            tools: ["Python", "LLMs", "React", "FastAPI", "Automation", "Business Logic"]
+        },
+        {
+            title: "VyapaarNiti",
+            featured: true,
+            link: "https://github.com/anshuu-prajapati",
+            linkIcon: "github",
+            points: [
+                "Developed comprehensive business consulting platform for SMBs across India",
+                "Built full-stack solution from ground up with modern web technologies",
+                "Created features for business strategy, analytics, and consulting workflows",
+                "Deployed scalable platform supporting multiple SMB verticals and use cases"
+            ],
+            tools: ["React.js", "Node.js", "Express.js", "MongoDB", "Full-Stack"]
+        },
+        {
+            title: "AI Lead Search Platform",
+            featured: true,
+            link: "https://github.com/anshuu-prajapati",
+            linkIcon: "github",
+            points: [
+                "Built AI-powered lead discovery using natural language search criteria",
+                "Implemented intelligent prospect identification based on business parameters",
+                "Created advanced filtering and ranking algorithms for lead quality scoring",
+                "Integrated with business databases for real-time prospect matching"
+            ],
+            tools: ["Python", "Machine Learning", "NLP", "FastAPI", "Data Processing"]
+        },
+        {
+            title: "GreenCart",
+            featured: true,
+            link: "https://github.com/anshuu-prajapati",
+            linkIcon: "github",
+            points: [
+                "Built quick-commerce eCommerce platform inspired by Blinkit model",
+                "Implemented fast and convenient grocery delivery system with real-time tracking",
+                "Created logistics optimization and order management systems",
+                "Developed scalable backend for high-volume transaction handling"
+            ],
+            tools: ["React.js", "Node.js", "Express.js", "APIs", "Payment Integration"]
+        }
+    ];
 
-    const featuredProjects = PROJECTS.filter(p => p.priority <= 3);
+    const floppyColors = [
+        '#1f2937', '#1e3a8a', '#4c1d95', '#831843',
+        '#14532d', '#7c2d12', '#0f4c5c', '#2d1b4e'
+    ];
+
+    const handleDiskClick = (index) => {
+        if (activeProject === index || isBooting) return;
+        setIsBooting(true);
+        setActiveProject(index);
+        setTimeout(() => setIsBooting(false), 1500);
+    };
 
     return (
-        <section className="section" id="projects">
+        <section className="section projects-section" id="projects">
             <div className="container">
-                <div className="section-head">
-                    <span className="section-tag">Featured</span>
-                    <div>
-                        <h2 className="section-title">Selected Projects</h2>
-                        <p className="section-subtitle">AI systems, intelligent applications, and cloud-powered products I've designed and built.</p>
-                    </div>
-                </div>
-
                 <motion.div
-                    className="projects-grid"
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.1 }}
+                    className="section-header reveal"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
                 >
-                    {featuredProjects.map(project => (
-                        <motion.div
-                            key={project.id}
-                            className="project-card"
-                            variants={itemVariants}
-                            whileHover={{ y: -4 }}
-                        >
-                            <div className="project-card-header">
-                                <span className="project-tag">{project.tag}</span>
-                                <button
-                                    className="project-expand"
-                                    onClick={() => setSelectedProject(project)}
-                                    aria-label="View project details"
-                                >
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                        <path d="M6 12l4-4-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <h3 className="project-title">{project.name}</h3>
-                            <p className="project-description">{project.shortDesc}</p>
-
-                            <div className="project-stack">
-                                {project.stack.slice(0, 4).map(tech => (
-                                    <span key={tech} className="tech-chip">{tech}</span>
-                                ))}
-                                {project.stack.length > 4 && (
-                                    <span className="tech-chip-more">+{project.stack.length - 4}</span>
-                                )}
-                            </div>
-
-                            <button
-                                className="project-learn-more"
-                                onClick={() => setSelectedProject(project)}
-                            >
-                                Learn more →
-                            </button>
-                        </motion.div>
-                    ))}
+                    <h2 className="section-title">Projects</h2>
+                    <div className="section-line"></div>
                 </motion.div>
 
-                <div className="projects-footer">
-                    <p>Interested in more projects?</p>
-                    <a href="https://github.com/anshuu-prajapati" target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
-                        Explore GitHub
-                    </a>
+                <div className="projects-desktop">
+                    {/* LEFT: Floppy Disks Grid */}
+                    <div className="floppy-desk-grid">
+                        {projectsData.map((project, index) => {
+                            const isInserted = activeProject === index;
+                            return (
+                                <motion.div
+                                    key={index}
+                                    className={`floppy-disk ${isInserted ? 'inserted' : ''}`}
+                                    onClick={() => handleDiskClick(index)}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true, margin: "-50px" }}
+                                    animate={isInserted ? {
+                                        scale: 0.95,
+                                        y: -5,
+                                        boxShadow: "0 20px 40px rgba(0,0,0,0.8)"
+                                    } : {
+                                        scale: 1,
+                                        y: 0,
+                                        boxShadow: "0 10px 15px rgba(0,0,0,0.5)"
+                                    }}
+                                    whileHover={!isInserted ? {
+                                        scale: 1.05, y: -10,
+                                        boxShadow: "0 15px 30px rgba(0,0,0,0.6)"
+                                    } : {}}
+                                    transition={{ type: "spring", bounce: 0.4, duration: 0.6 }}
+                                >
+                                    <div className="floppy-plastic" style={{
+                                        backgroundColor: floppyColors[index % floppyColors.length]
+                                    }}>
+                                        <div className="floppy-shutter">
+                                            <div className="shutter-door"></div>
+                                        </div>
+                                        <div className="floppy-arrow"></div>
+                                        <div className="floppy-label-area">
+                                            <div className="floppy-label-paper">
+                                                <div className="label-stripe" style={{
+                                                    backgroundColor: floppyColors[(index + 1) % floppyColors.length]
+                                                }}></div>
+                                                <span className="label-text">
+                                                    {project.title.split(' ').slice(0, 3).join(' ')}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="floppy-notch"></div>
+                                        {isInserted && (
+                                            <div className="active-disk-indicator">
+                                                <div className="indicator-light"></div>
+                                                <span>IN DRIVE</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
+                    </div>
+
+                    {/* RIGHT: CRT Terminal & Drive */}
+                    <div className="crt-terminal-wrapper">
+                        <div className="floppy-drive">
+                            <div className="drive-slot"></div>
+                            <div className={`drive-light ${isBooting ? 'reading' : 'idle'}`}></div>
+                        </div>
+
+                        <div className="crt-monitor">
+                            <div className="crt-glass">
+                                <div className="scanlines"></div>
+                                <div className="crt-content">
+                                    {isBooting ? (
+                                        <div className="boot-sequence">
+                                            <p className="boot-1">{`> MOUNTING DISK...`}</p>
+                                            <p className="boot-2">{`> READING SECTORS... [OK]`}</p>
+                                            <p className="boot-3">{`> DECRYPTING PROJECT DATA...`}</p>
+                                            <p className="boot-4 blink">_</p>
+                                        </div>
+                                    ) : (
+                                        <motion.div
+                                            className="project-data"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ duration: 0.1 }}
+                                        >
+                                            <div className="terminal-header">
+                                                <span>A:\&gt; RUN {projectsData[activeProject].title.toUpperCase().replace(/\s+/g, '_').substring(0, 10)}.EXE</span>
+                                            </div>
+
+                                            <h3 className="term-title">
+                                                {projectsData[activeProject].title}
+                                            </h3>
+
+                                            <div className="term-points">
+                                                {projectsData[activeProject].points.map((pt, i) => (
+                                                    <p key={i}>{`* ${pt}`}</p>
+                                                ))}
+                                            </div>
+
+                                            <div className="term-tools">
+                                                <p>{`> SYSTEM DEPENDENCIES:`}</p>
+                                                <ul>
+                                                    {projectsData[activeProject].tools.map((t, i) => (
+                                                        <li key={i}>{`- ${t}`}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+
+                                            <div className="term-actions">
+                                                <a href={projectsData[activeProject].link} target="_blank" rel="noreferrer" className="term-link">
+                                                    {`> EXECUTE SOURCE_CODE (${projectsData[activeProject].linkIcon.toUpperCase()})`}
+                                                </a>
+                                            </div>
+                                            <div className="term-cursor"><span className="blink">_</span></div>
+                                        </motion.div>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="monitor-base"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <ProjectModal
-                project={selectedProject}
-                isOpen={selectedProject !== null}
-                onClose={() => setSelectedProject(null)}
-            />
         </section>
     );
 };

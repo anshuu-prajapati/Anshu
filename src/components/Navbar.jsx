@@ -3,9 +3,9 @@ import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
 
 const LINKS = [
     { href: '#about', label: 'About' },
-    { href: '#capabilities', label: 'Capabilities' },
+    { href: '#experience', label: 'Experience' },
+    { href: '#skills', label: 'Skills' },
     { href: '#projects', label: 'Projects' },
-    { href: '#workflow', label: 'Process' },
     { href: '#contact', label: 'Contact' },
 ];
 
@@ -21,7 +21,7 @@ const Navbar = () => {
     }, []);
 
     useEffect(() => {
-        const ids = ['hero', 'about', 'capabilities', 'projects', 'workflow', 'contact', 'freelance'];
+        const ids = ['hero', 'about', 'experience', 'skills', 'projects', 'contact'];
         const sections = ids.map(id => document.getElementById(id)).filter(Boolean);
 
         const observer = new IntersectionObserver(

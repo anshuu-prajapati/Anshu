@@ -1,159 +1,171 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 
-const NODES = [
-    { id: 'ai', label: 'AI Systems', x: 50, y: 8 },
-    { id: 'ml', label: 'Machine Learning', x: 78, y: 35 },
-    { id: 'cv', label: 'Computer Vision', x: 78, y: 65 },
-    { id: 'cloud', label: 'Cloud Deployment', x: 50, y: 92 },
-    { id: 'genai', label: 'Generative AI', x: 22, y: 65 },
-    { id: 'infra', label: 'Infrastructure', x: 22, y: 35 },
-];
-
-// Simulated data pulse animation for the network
-const generatePulse = (timestamp) => {
-    return Math.sin(timestamp * 0.003) * 0.5 + 0.5;
-};
-
-const Hero = () => {
-    const [pulseIntensity, setPulseIntensity] = useState(0.5);
-
-    useEffect(() => {
-        let animationFrameId;
-        const animate = (timestamp) => {
-            setPulseIntensity(generatePulse(timestamp));
-            animationFrameId = requestAnimationFrame(animate);
-        };
-        animationFrameId = requestAnimationFrame(animate);
-        return () => cancelAnimationFrame(animationFrameId);
-    }, []);
-
+const Hero = ({ onOpenResume }) => {
     return (
-        <section className="deck" id="hero">
-            <div className="deck-inner">
+        <section className="hero-workspace" id="hero">
+            {/* Scattered desk objects */}
+            <div className="desk-objects">
                 <motion.div
-                    className="deck-copy"
-                    initial={{ opacity: 0, y: 24 }}
+                    className="desk-obj sticky-1"
+                    initial={{ opacity: 0, scale: 0.5, rotate: -12 }}
+                    animate={{ opacity: 1, scale: 1, rotate: -12, y: [0, -8, 0] }}
+                    transition={{ duration: 0.8, delay: 0.3, y: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
+                    style={{
+                        position: 'absolute',
+                        width: '120px',
+                        height: '120px',
+                        background: 'linear-gradient(135deg, #a855f7, #c084fc)',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#fff',
+                        fontWeight: 'bold',
+                        fontSize: '14px',
+                        boxShadow: '0 8px 24px rgba(168, 85, 247, 0.3)',
+                        textAlign: 'center',
+                        padding: '12px'
+                    }}
+                >
+                    AI Engineer
+                </motion.div>
+
+                <motion.div
+                    className="desk-obj sticky-2"
+                    initial={{ opacity: 0, scale: 0.5, rotate: 8 }}
+                    animate={{ opacity: 1, scale: 1, rotate: 8, y: [0, -6, 0] }}
+                    transition={{ duration: 0.8, delay: 0.5, y: { duration: 5, repeat: Infinity, ease: "easeInOut" } }}
+                    style={{
+                        position: 'absolute',
+                        width: '120px',
+                        height: '120px',
+                        background: 'linear-gradient(135deg, #818cf8, #6366f1)',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#fff',
+                        fontWeight: 'bold',
+                        fontSize: '14px',
+                        boxShadow: '0 8px 24px rgba(129, 140, 248, 0.3)',
+                        textAlign: 'center',
+                        padding: '12px'
+                    }}
+                >
+                    LLMs & RAG
+                </motion.div>
+
+                <motion.div
+                    className="desk-obj terminal-obj"
+                    initial={{ opacity: 0, x: -60 }}
+                    animate={{ opacity: 1, x: 0, y: [0, -10, 0] }}
+                    transition={{ duration: 0.8, delay: 0.7, y: { duration: 6, repeat: Infinity, ease: "easeInOut" } }}
+                    style={{
+                        position: 'absolute',
+                        width: '100px',
+                        height: '100px',
+                        background: 'linear-gradient(135deg, #f472b6, #ec4899)',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#fff',
+                        fontWeight: 'bold',
+                        fontSize: '13px',
+                        boxShadow: '0 8px 24px rgba(244, 114, 182, 0.3)',
+                        textAlign: 'center',
+                        padding: '10px'
+                    }}
+                >
+                    CV & Vision
+                </motion.div>
+
+                <motion.div
+                    className="desk-obj headphones-obj"
+                    initial={{ opacity: 0, x: 60 }}
+                    animate={{ opacity: 1, x: 0, y: [0, -7, 0] }}
+                    transition={{ duration: 0.8, delay: 0.9, y: { duration: 5.5, repeat: Infinity, ease: "easeInOut" } }}
+                    style={{
+                        position: 'absolute',
+                        width: '100px',
+                        height: '100px',
+                        background: 'linear-gradient(135deg, #34d399, #10b981)',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#fff',
+                        fontWeight: 'bold',
+                        fontSize: '13px',
+                        boxShadow: '0 8px 24px rgba(52, 211, 153, 0.3)',
+                        textAlign: 'center',
+                        padding: '10px'
+                    }}
+                >
+                    Full-Stack
+                </motion.div>
+
+                <motion.div
+                    className="desk-obj coffee-obj"
+                    initial={{ opacity: 0, scale: 0.6 }}
+                    animate={{ opacity: 1, scale: 1, y: [0, -5, 0] }}
+                    transition={{ duration: 0.8, delay: 1.1, y: { duration: 4.5, repeat: Infinity, ease: "easeInOut" } }}
+                    style={{
+                        position: 'absolute',
+                        width: '90px',
+                        height: '90px',
+                        background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#fff',
+                        fontWeight: 'bold',
+                        fontSize: '13px',
+                        boxShadow: '0 8px 24px rgba(245, 158, 11, 0.3)',
+                        textAlign: 'center',
+                        padding: '10px'
+                    }}
+                >
+                    FastAPI
+                </motion.div>
+            </div>
+
+            {/* Main hero content */}
+            <div className="hero-center">
+                <motion.h1
+                    className="hero-title"
+                    initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: 'easeOut' }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
                 >
-                    <div className="deck-status">
-                        <span className="status-dot" />
-                        OPEN TO AI / ML OPPORTUNITIES
-                    </div>
+                    WELCOME TO<br />
+                    <span className="hero-title-accent">ANSHU'S</span> PORTFOLIO
+                </motion.h1>
 
-                    <h1 className="deck-title">
-                        ANSHU PRAJAPATI
-                    </h1>
-
-                    <h2 className="deck-subtitle">
-                        AI Engineer building intelligent systems that solve real-world problems.
-                    </h2>
-
-                    <p className="deck-lede">
-                        I design and deploy AI, Generative AI, Computer Vision, Machine Learning, and Cloud-powered applications — turning complex ideas into reliable, production-ready products.
-                    </p>
-
-                    <div className="deck-positioning">
-                        AI Engineering · GenAI · Computer Vision · Machine Learning · Cloud
-                    </div>
-
-                    <div className="deck-actions">
-                        <a href="#projects" className="btn btn-primary">
-                            <span>View My Work</span>
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <path d="M6 12l4-4-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                            </svg>
-                        </a>
-                        <a href="https://github.com/anshuu-prajapati" className="btn btn-ghost" target="_blank" rel="noopener noreferrer">
-                            GitHub
-                        </a>
-                        <a href="https://linkedin.com/in/anshuu-prajapati" className="btn btn-ghost" target="_blank" rel="noopener noreferrer">
-                            LinkedIn
-                        </a>
-                    </div>
-                </motion.div>
-
-                <motion.div
-                    className="deck-graph"
-                    initial={{ opacity: 0, scale: 0.92 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.9, delay: 0.2, ease: 'easeOut' }}
-                >
-                    <div className="graph-frame">
-                        <span className="graph-frame-label">ai_system.execute()</span>
-                        <svg className="graph-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-                            {/* SVG edges connecting center to nodes */}
-                            {NODES.map((node, i) => (
-                                <motion.line
-                                    key={`edge-${node.id}`}
-                                    x1="50" y1="50" x2={node.x} y2={node.y}
-                                    className="graph-edge"
-                                    initial={{ strokeDashoffset: 0, opacity: 0 }}
-                                    animate={{ strokeDashoffset: -20, opacity: 0.6 }}
-                                    transition={{
-                                        opacity: { duration: 0.6, delay: 0.4 + i * 0.08 },
-                                        strokeDashoffset: { duration: 2, repeat: Infinity, ease: 'linear', delay: 0.5 + i * 0.08 }
-                                    }}
-                                />
-                            ))}
-                            
-                            {/* Core node */}
-                            <circle cx="50" cy="50" r="6" className="graph-core" />
-                            <motion.circle 
-                                cx="50" cy="50" r="6" 
-                                className="graph-core-ping"
-                                animate={{
-                                    r: [6, 14],
-                                    opacity: [0.8, 0]
-                                }}
-                                transition={{
-                                    duration: 2,
-                                    repeat: Infinity,
-                                    ease: 'easeOut'
-                                }}
-                            />
-                        </svg>
-
-                        {/* Peripheral nodes */}
-                        {NODES.map((node, i) => (
-                            <motion.div
-                                key={`node-${node.id}`}
-                                className="graph-node"
-                                style={{ left: `${node.x}%`, top: `${node.y}%` }}
-                                initial={{ opacity: 0, scale: 0.3 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.5, delay: 0.5 + i * 0.08, ease: 'easeOut' }}
-                            >
-                                <motion.span 
-                                    className="graph-node-dot"
-                                    animate={{
-                                        boxShadow: [
-                                            `0 0 6px rgba(6, 182, 212, 0.4)`,
-                                            `0 0 12px rgba(6, 182, 212, 0.8)`,
-                                            `0 0 6px rgba(6, 182, 212, 0.4)`
-                                        ]
-                                    }}
-                                    transition={{
-                                        duration: 2,
-                                        repeat: Infinity,
-                                        ease: 'easeInOut',
-                                        delay: i * 0.15
-                                    }}
-                                />
-                                <span className="graph-node-label">{node.label}</span>
-                            </motion.div>
-                        ))}
-
-                        <motion.div 
-                            className="graph-core-label"
-                            animate={{ opacity: [0.7, 1, 0.7] }}
-                            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                        >
-                            AI ENGINE
-                        </motion.div>
-                    </div>
-                </motion.div>
+                <div className="hero-ctas">
+                    <motion.a
+                        href="#projects"
+                        className="hero-cta"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.6 }}
+                    >
+                        View Projects
+                    </motion.a>
+                    <motion.a
+                        href="https://github.com/anshuu-prajapati"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="hero-cta secondary-cta"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.7 }}
+                    >
+                        GitHub
+                    </motion.a>
+                </div>
             </div>
         </section>
     );

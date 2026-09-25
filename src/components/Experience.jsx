@@ -25,10 +25,11 @@ const JOBS = [
         period: 'Jan 2025 \u2014 Jan 2026',
         status: 'COMPLETE',
         points: [
-            'Developed responsive web applications using React, Node.js, and WordPress.',
-            'Built scalable APIs and backend systems for business applications.',
-            'Integrated third-party APIs and automated internal workflows.',
-            'Improved website performance and user engagement through optimization initiatives.',
+            'Developed VyapaarNiti, a comprehensive business consulting platform for SMBs across India, built from ground up using React.js, Node.js, and Express.js with MongoDB backend.',
+            'Built AI-powered lead search platform enabling businesses to discover and identify relevant prospects using natural language search criteria with intelligent matching.',
+            'Developed GreenCart, a quick-commerce eCommerce platform inspired by Blinkit, featuring fast delivery, real-time order tracking, and logistics optimization for grocery and essentials.',
+            'Engineered scalable full-stack solutions handling complex business workflows, multi-tenant operations, and high-volume transaction processing.',
+            'Implemented responsive web applications with modern UI/UX patterns, API integrations, and automated internal workflows.',
         ],
     },
 ];

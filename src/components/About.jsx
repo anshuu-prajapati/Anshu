@@ -1,99 +1,237 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const ABOUT_SECTIONS = [
+const FILES = {
+    'bio.md': {
+        icon: '📝',
+        lang: 'markdown',
+        content: `
+# Anshu Prajapati
+> AI Engineer & Full Stack Developer
+
+I'm passionate about building intelligent systems that solve real-world problems using AI, machine learning, and modern web technologies.
+
+I design and deploy production-ready AI applications, from RAG-based systems to computer vision pipelines, with expertise in full-stack development and cloud infrastructure.
+
+*Building AI systems that make a real impact.*
+`
+    },
+    'experience.json': {
+        icon: '💼',
+        lang: 'json',
+        content: `{
+  "current": "AI Engineer @ Maaze",
+  "experience": [
     {
-        title: 'Who I Am',
-        content: "I'm an AI Engineer focused on building practical AI systems across Generative AI, Computer Vision, Machine Learning, document intelligence, and cloud platforms.",
+      "role": "AI Engineer",
+      "company": "Maaze",
+      "period": "Jan 2026 - Present",
+      "focus": ["Voice AI", "LLMs", "RAG", "Agents"]
     },
     {
-        title: 'My Approach',
-        content: 'I enjoy taking ideas from experimentation to deployed products — combining machine learning with modern software engineering to build applications that are useful, scalable, and reliable.',
+      "role": "Full Stack Developer",
+      "company": "D-Mac",
+      "period": "Jan 2025 - Jan 2026",
+      "projects": ["VyapaarNiti", "GreenCart"]
+    }
+  ]
+}`
     },
-    {
-        title: 'The Process',
-        content: 'My approach is simple: understand the problem, design the right architecture, build the solution, deploy it, and continuously improve it based on real-world feedback.',
+    'skills.js': {
+        icon: '⚡',
+        lang: 'javascript',
+        content: `import { Developer } from 'anshu';
+
+const profile = new Developer({
+  specialization: ['AI Systems', 'LLMs', 'RAG', 'Computer Vision'],
+  expertise: [
+    'Full-Stack Development',
+    'Machine Learning',
+    'Voice AI',
+    'Document Intelligence'
+  ],
+  tools: [
+    'Python', 'React', 'Node.js', 'FastAPI',
+    'LangChain', 'PyTorch', 'OpenCV'
+  ]
+});
+
+export default profile;`
     },
-];
+    'focus.py': {
+        icon: '🎯',
+        lang: 'python',
+        content: `class AnshusFocus:
+    def current_projects(self):
+        return [
+            "AI Document Intelligence",
+            "Voice Agent Systems",
+            "Computer Vision Analytics",
+            "Generative AI Applications"
+        ]
 
-const PROFILE_INFO = [
-    { key: 'base', label: 'Location', value: 'Delhi, India' },
-    { key: 'role', label: 'Current Role', value: 'AI Engineer @ Maaze' },
-    { key: 'focus', label: 'Focus', value: 'Agentic AI · RAG · Production Systems' },
-    { key: 'edu', label: 'Education', value: 'B.Sc. Computer Science, IGNOU · 2023–2026' },
-];
+    def mission(self):
+        return "Building intelligent systems that solve real problems."
 
-const About = () => {
-    const [activeSection, setActiveSection] = useState(0);
+    def always_learning(self):
+        return True
+`
+    }
+};
 
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.12,
-                delayChildren: 0.1,
-            },
-        },
-    };
+const SyntaxHighlighter = ({ content, lang }) => {
+    const lines = content.trim().split('\n');
 
-    const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.5, ease: 'easeOut' },
-        },
+    const renderTokenizedLine = (line, index) => {
+        if (lang === 'json') {
+            return (
+                <div key={index} className="ide-line">
+                    <span className="line-num">{index + 1}</span>
+                    <span className="line-content" dangerouslySetInnerHTML={{
+                        __html: line
+                            .replace(/"([^"]+)"(?=:)/g, '<span class="token-key">"$1"</span>')
+                            .replace(/:\s*"(.*?)"/g, ': <span class="token-string">"$1"</span>')
+                    }} />
+                </div>
+            );
+        }
+
+        if (lang === 'javascript') {
+            let parsed = line
+                .replace(/(['"])(.*?)\1/g, "__STR__$2__STR__")
+                .replace(/\b(import|from|const|new|export|default|let|var|if|else|return|class|function|async|await|try|catch|finally|throw|extends|super)\b/g, "__KW__$1__KW__")
+                .replace(/\b([A-Z][a-zA-Z0-9_]*)\b/g, "__CLS__$1__CLS__");
+
+            parsed = parsed
+                .replace(/__STR__(.*?)__STR__/g, '<span class="token-string">\'$1\'</span>')
+                .replace(/__KW__(.*?)__KW__/g, '<span class="token-keyword">$1</span>')
+                .replace(/__CLS__(.*?)__CLS__/g, '<span class="token-class">$1</span>');
+
+            return (
+                <div key={index} className="ide-line">
+                    <span className="line-num">{index + 1}</span>
+                    <span className="line-content" dangerouslySetInnerHTML={{ __html: parsed }} />
+                </div>
+            );
+        }
+
+        if (lang === 'python') {
+            let parsed = line
+                .replace(/(['"])(.*?)\1/g, "__STR__$2__STR__")
+                .replace(/\b(class|def|return|if|else|elif|for|while|import|from|as|try|except|finally|with|lambda|yield|raise|pass|break|continue)\b/g, "__KW__$1__KW__")
+                .replace(/\b([a-zA-Z_]\w*)(?=\()/g, "__METH__$1__METH__");
+
+            parsed = parsed
+                .replace(/__STR__(.*?)__STR__/g, '<span class="token-string">"$1"</span>')
+                .replace(/__KW__(.*?)__KW__/g, '<span class="token-keyword">$1</span>')
+                .replace(/__METH__(.*?)__METH__/g, '<span class="token-method">$1</span>');
+
+            return (
+                <div key={index} className="ide-line">
+                    <span className="line-num">{index + 1}</span>
+                    <span className="line-content" dangerouslySetInnerHTML={{ __html: parsed }} />
+                </div>
+            );
+        }
+
+        return (
+            <div key={index} className="ide-line">
+                <span className="line-num">{index + 1}</span>
+                <span className="line-content" dangerouslySetInnerHTML={{
+                    __html: line
+                        .replace(/^#\s+(.*)/g, '<span class="token-md-h1"># $1</span>')
+                        .replace(/^>\s+(.*)/g, '<span class="token-md-quote">> $1</span>')
+                        .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+                }} />
+            </div>
+        );
     };
 
     return (
+        <div className="ide-code">
+            {lines.map((line, i) => renderTokenizedLine(line, i))}
+        </div>
+    );
+};
+
+const About = () => {
+    const [activeTab, setActiveTab] = useState('bio.md');
+
+    return (
         <section className="section" id="about">
-            <div className="container">
-                <div className="section-head">
-                    <span className="section-tag">About</span>
+            <div className="container" style={{ maxWidth: '1000px' }}>
+                <div className="section-header reveal">
                     <h2 className="section-title">About Me</h2>
+                    <div className="section-line"></div>
                 </div>
 
-                <div className="about-grid">
-                    <motion.div
-                        className="about-content"
-                        variants={containerVariants}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.2 }}
-                    >
-                        {ABOUT_SECTIONS.map((section, idx) => (
-                            <motion.div
-                                key={idx}
-                                className="about-card"
-                                variants={itemVariants}
-                                whileHover={{ y: -2 }}
-                            >
-                                <h3 className="about-section-title">{section.title}</h3>
-                                <p className="about-text">{section.content}</p>
-                            </motion.div>
-                        ))}
-                    </motion.div>
+                <div className="ide-window reveal">
+                    {/* Window Header */}
+                    <div className="ide-header">
+                        <div className="window-controls">
+                            <span className="dot red"></span>
+                            <span className="dot yellow"></span>
+                            <span className="dot green"></span>
+                        </div>
+                        <div className="window-title">anshu_portfolio — {activeTab}</div>
+                    </div>
 
-                    <motion.div
-                        className="about-info"
-                        initial={{ opacity: 0, x: 20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.5, delay: 0.2 }}
-                        viewport={{ once: true }}
-                    >
-                        <div className="about-info-card">
-                            <h3 className="about-info-title">Profile Information</h3>
-                            <div className="about-info-grid">
-                                {PROFILE_INFO.map(info => (
-                                    <div key={info.key} className="about-info-row">
-                                        <span className="about-info-label">{info.label}</span>
-                                        <span className="about-info-value">{info.value}</span>
+                    <div className="ide-body">
+                        {/* Sidebar */}
+                        <div className="ide-sidebar">
+                            <div className="sidebar-title visible-desktop">EXPLORER</div>
+                            <div className="folder visible-desktop">
+                                <span className="folder-icon">📂</span> portfolio_src
+                            </div>
+                            <ul className="file-list mobile-scroll">
+                                {Object.keys(FILES).map(fileName => (
+                                    <li
+                                        key={fileName}
+                                        className={`file-item ${activeTab === fileName ? 'active' : ''}`}
+                                        onClick={() => setActiveTab(fileName)}
+                                    >
+                                        <span className="file-icon">{FILES[fileName].icon}</span>
+                                        <span className="file-name-text">{fileName}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Editor Area */}
+                        <div className="ide-editor">
+                            {/* Editor Tabs */}
+                            <div className="editor-tabs">
+                                {Object.keys(FILES).map(fileName => (
+                                    <div
+                                        key={fileName}
+                                        className={`editor-tab ${activeTab === fileName ? 'active' : ''}`}
+                                        onClick={() => setActiveTab(fileName)}
+                                    >
+                                        <span className="tab-icon">{FILES[fileName].icon}</span>
+                                        {fileName}
                                     </div>
                                 ))}
                             </div>
+
+                            {/* Code View */}
+                            <div className="editor-content">
+                                <AnimatePresence mode="wait">
+                                    <motion.div
+                                        key={activeTab}
+                                        initial={{ opacity: 0, y: 5 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -5 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        <SyntaxHighlighter
+                                            content={FILES[activeTab].content}
+                                            lang={FILES[activeTab].lang}
+                                        />
+                                    </motion.div>
+                                </AnimatePresence>
+                            </div>
                         </div>
-                    </motion.div>
+                    </div>
                 </div>
             </div>
         </section>
