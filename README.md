@@ -53,3 +53,4 @@ in your repo settings if it isn't automatic.
 - **Contact links:** `src/components/Contact.jsx` — `LINKS` object.
 - **Colors / fonts / spacing:** `src/index.css` — tokens live at the
   top under `:root`.
+  
