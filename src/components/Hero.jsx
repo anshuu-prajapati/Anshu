@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const Hero = ({ onOpenResume }) => {
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
         <section className="hero-workspace" id="hero">
-            {/* Scattered desk objects */}
+            {/* Scattered desk objects - only show on desktop */}
+            {!isMobile && (
             <div className="desk-objects">
                 <motion.div
                     className="desk-obj sticky-1"
@@ -13,8 +22,8 @@ const Hero = ({ onOpenResume }) => {
                     transition={{ duration: 0.8, delay: 0.3, y: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
                     style={{
                         position: 'absolute',
-                        width: '120px',
-                        height: '120px',
+                        width: 'clamp(80px, 15vw, 120px)',
+                        height: 'clamp(80px, 15vw, 120px)',
                         background: 'linear-gradient(135deg, #a855f7, #c084fc)',
                         borderRadius: '8px',
                         display: 'flex',
@@ -22,7 +31,7 @@ const Hero = ({ onOpenResume }) => {
                         justifyContent: 'center',
                         color: '#fff',
                         fontWeight: 'bold',
-                        fontSize: '14px',
+                        fontSize: 'clamp(11px, 2vw, 14px)',
                         boxShadow: '0 8px 24px rgba(168, 85, 247, 0.3)',
                         textAlign: 'center',
                         padding: '12px'
@@ -131,6 +140,7 @@ const Hero = ({ onOpenResume }) => {
                     FastAPI
                 </motion.div>
             </div>
+            )}
 
             {/* Main hero content */}
             <div className="hero-center">
