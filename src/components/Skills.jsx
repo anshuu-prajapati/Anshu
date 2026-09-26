@@ -3,38 +3,33 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const Skills = () => {
     const radarSkills = [
-        // Programming Languages (Top Right)
-        { name: "Python", prof: 95, angle: 10, color: "#eab308" },
-        { name: "TypeScript", prof: 88, angle: 25, color: "#3b82f6" },
-        { name: "JavaScript", prof: 90, angle: 40, color: "#f59e0b" },
-        { name: "SQL", prof: 85, angle: 55, color: "#10b981" },
-        { name: "MATLAB", prof: 75, angle: 70, color: "#8b5cf6" },
+        // Top Right (0 to 90) -> Languages
+        { name: "Python", prof: 92, angle: 15, color: "#eab308" },
+        { name: "PostgreSQL", prof: 70, angle: 35, color: "#336791" },
+        { name: "MySQL", prof: 70, angle: 55, color: "#22c55e" },
+        { name: "C / C++", prof: 65, angle: 75, color: "#9ca3af" },
+        { name: "Java", prof: 40, angle: 88, color: "#f97316" },
 
-        // Generative AI & LLMs (Top Left)
-        { name: "OpenAI API", prof: 92, angle: 90, color: "#a855f7" },
-        { name: "RAG", prof: 90, angle: 105, color: "#ec4899" },
-        { name: "LangGraph", prof: 88, angle: 120, color: "#f472b6" },
-        { name: "Agentic AI", prof: 90, angle: 135, color: "#a855f7" },
-        { name: "Embeddings", prof: 87, angle: 150, color: "#c084fc" },
-        { name: "Prompt Engineering", prof: 88, angle: 165, color: "#e879f9" },
-        { name: "Computer Vision", prof: 86, angle: 180, color: "#14b8a6" },
+        // Top Left (90 to 180) -> ML / AI Tools
+        { name: "Scikit-learn", prof: 85, angle: 105, color: "#3b82f6" },
+        { name: "NumPy / Pandas", prof: 88, angle: 125, color: "#ec4899" },
+        { name: "HuggingFace", prof: 78, angle: 145, color: "#ffcc00" },
+        { name: "YOLOv8 & OpenCV", prof: 75, angle: 165, color: "#14b8a6" },
+        { name: "LangChain / Graph", prof: 85, angle: 180, color: "#a855f7" },
 
-        // Machine Learning & Data Science (Bottom Left)
-        { name: "PyTorch", prof: 88, angle: 195, color: "#f97316" },
-        { name: "TensorFlow", prof: 82, angle: 210, color: "#f59e0b" },
-        { name: "NLP", prof: 85, angle: 225, color: "#ec4899" },
-        { name: "Pandas & NumPy", prof: 92, angle: 240, color: "#3b82f6" },
-        { name: "Scikit-learn", prof: 87, angle: 255, color: "#6366f1" },
-        { name: "Recommender Systems", prof: 80, angle: 270, color: "#a855f7" },
+        // Bottom Left (180 to 270) -> Web Dev
+        { name: "HTML / CSS", prof: 80, angle: 195, color: "#f43f5e" },
+        { name: "JavaScript", prof: 72, angle: 212, color: "#eab308" },
+        { name: "React", prof: 60, angle: 229, color: "#3b82f6" },
+        { name: "Streamlit", prof: 85, angle: 246, color: "#ff4b4b" },
+        { name: "Flask", prof: 65, angle: 263, color: "#64748b" },
 
-        // Backend, DevOps & APIs (Bottom Right)
-        { name: "FastAPI", prof: 92, angle: 285, color: "#10b981" },
-        { name: "Node.js & Express", prof: 85, angle: 298, color: "#22c55e" },
-        { name: "Docker & Kubernetes", prof: 82, angle: 310, color: "#2496ed" },
-        { name: "REST APIs", prof: 90, angle: 322, color: "#3b82f6" },
-        { name: "Microservices", prof: 82, angle: 334, color: "#06b6d4" },
-        { name: "Azure & AWS", prof: 85, angle: 346, color: "#0ea5e9" },
-        { name: "PostgreSQL & MySQL", prof: 88, angle: 358, color: "#f43f5e" },
+        // Bottom Right (270 to 360) -> Tools & Env
+        { name: "Git / GitHub", prof: 85, angle: 285, color: "#a3e635" },
+        { name: "Docker & MLOps", prof: 82, angle: 298, color: "#2496ed" },
+        { name: "Botpress", prof: 70, angle: 310, color: "#d946ef" },
+        { name: "Jupyter / Colab", prof: 90, angle: 335, color: "#f97316" },
+        { name: "VS Code", prof: 90, angle: 355, color: "#0ea5e9" },
     ];
 
     const [hoveredSkill, setHoveredSkill] = useState(null);
@@ -48,10 +43,10 @@ const Skills = () => {
     };
 
     const getCategory = (angle) => {
-        if (angle >= 0 && angle < 90) return "Programming Languages";
-        if (angle >= 90 && angle < 180) return "Generative AI & LLMs";
-        if (angle >= 180 && angle < 270) return "ML & Data Science";
-        return "Backend, DevOps & Cloud";
+        if (angle >= 0 && angle < 90) return "Core Languages";
+        if (angle >= 90 && angle < 180) return "ML & AI Tools";
+        if (angle >= 180 && angle < 270) return "Web Development";
+        return "Dev Environment";
     };
 
     return (
