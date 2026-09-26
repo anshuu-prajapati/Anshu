@@ -21,11 +21,11 @@ function App() {
       <Hero onOpenResume={() => setIsResumeOpen(true)} />
       <Impact />
       <About />
-      <Education />
-      <Experience />
-      <Certificates />
       <Skills />
       <Projects />
+      <Experience />
+      <Education />
+      <Certificates />
       <Contact />
       <Footer />
       <ResumeModal isOpen={isResumeOpen} onClose={() => setIsResumeOpen(false)} />
